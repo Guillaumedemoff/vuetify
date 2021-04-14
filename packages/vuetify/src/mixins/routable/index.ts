@@ -71,7 +71,12 @@ export default Vue.extend({
   },
 
   watch: {
-    $route: 'onRouteChange',
+    $route: {
+      handler () {
+        this.onRouteChange()
+      },
+      immediate: true,
+    },
   },
 
   methods: {
@@ -136,12 +141,12 @@ export default Vue.extend({
       return { tag, data }
     },
     onRouteChange () {
-      if (!this.to || !this.$refs.link || !this.$route) return
-      const activeClass = `${this.activeClass} ${this.proxyClass || ''}`.trim()
-
-      const path = `_vnode.data.class.${activeClass}`
-
       this.$nextTick(() => {
+        if (!this.to || !this.$refs.link || !this.$route) return
+        const activeClass = `${this.activeClass} ${this.proxyClass || ''}`.trim()
+
+        const path = `_vnode.data.class.${activeClass}`
+
         /* istanbul ignore else */
         if (getObjectValueByPath(this.$refs.link, path)) {
           this.toggle()
